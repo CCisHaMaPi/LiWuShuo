@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.lishijia.my.liwushuo.MainActivity">
+
+    <FrameLayout
+        android:id="@+id/home_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <RadioGroup
+        android:id="@+id/home_radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+        <RadioButton
+            style="@style/HomeRadioBtn"
+            android:id="@+id/home_radio_btn_guide"
+            android:text="@string/guide"
+            android:drawableTop="@drawable/home_btn_guide_selector"
+            android:checked="true"/>
+        <RadioButton
+            style="@style/HomeRadioBtn"
+            android:id="@+id/home_radio_btn_hot"
+            android:text="@string/hot"
+            android:drawableTop="@drawable/home_btn_hot_selector"/>
+        <RadioButton
+            style="@style/HomeRadioBtn"
+            android:id="@+id/home_radio_btn_class"
+            android:text="@string/clazz"
+            android:drawableTop="@drawable/home_btn_class_selector"/>
+        <RadioButton
+            style="@style/HomeRadioBtn"
+            android:id="@+id/home_radio_btn_mine"
+            android:text="@string/mine"
+            android:drawableTop="@drawable/home_btn_mine_selector"/>
+    </RadioGroup>
+</RelativeLayout>

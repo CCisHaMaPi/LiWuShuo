@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">LiWuShuo</string>
+    <string name="guide">指南</string>
+    <string name="hot">热门</string>
+    <string name="clazz">分类</string>
+    <string name="mine">我的</string>
+</resources>

@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "D:\\work-space\\LiWuShuo\\refreshlibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\refresh_header_box_anim.xml",
+        "source": "D:\\work-space\\LiWuShuo\\refreshlibrary\\build\\intermediates\\bundles\\debug\\res\\drawable\\refresh_header_box_anim.xml"
+    },
+    {
+        "merged": "G:\\Android\\work-space\\LiWuShuo\\refreshlibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\refresh_header_box_anim.xml",
+        "source": "G:\\Android\\work-space\\LiWuShuo\\refreshlibrary\\build\\intermediates\\bundles\\debug\\res\\drawable\\refresh_header_box_anim.xml"
+    },
+    {
+        "merged": "D:\\work-space\\LiWuShuo\\refreshlibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\indicator_bg_bottom.xml",
+        "source": "D:\\work-space\\LiWuShuo\\refreshlibrary\\build\\intermediates\\bundles\\debug\\res\\drawable\\indicator_bg_bottom.xml"
+    },
+    {
+        "merged": "G:\\Android\\work-space\\LiWuShuo\\refreshlibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\indicator_bg_bottom.xml",
+        "source": "G:\\Android\\work-space\\LiWuShuo\\refreshlibrary\\build\\intermediates\\bundles\\debug\\res\\drawable\\indicator_bg_bottom.xml"
+    },
+    {
+        "merged": "G:\\Android\\work-space\\LiWuShuo\\refreshlibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\indicator_bg_top.xml",
+        "source": "G:\\Android\\work-space\\LiWuShuo\\refreshlibrary\\build\\intermediates\\bundles\\debug\\res\\drawable\\indicator_bg_top.xml"
+    },
+    {
+        "merged": "D:\\work-space\\LiWuShuo\\refreshlibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\indicator_bg_top.xml",
+        "source": "D:\\work-space\\LiWuShuo\\refreshlibrary\\build\\intermediates\\bundles\\debug\\res\\drawable\\indicator_bg_top.xml"
+    }
+]
