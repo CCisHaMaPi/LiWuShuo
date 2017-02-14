@@ -107,6 +107,12 @@ public class HomeSelectionFrag extends Fragment implements IHomePresenter.IHomeP
         expandableListView = refreshListView.getRefreshableView();
         expandableListView.addHeaderView(view);
         convenientBanner = headerViewHolder.banner;
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                return false;
+            }
+        });
     }
 
     class HeaderViewHolder{
@@ -132,7 +138,7 @@ public class HomeSelectionFrag extends Fragment implements IHomePresenter.IHomeP
                 //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
                 .setPageIndicator(new int[]{R.drawable.banner_dot_grey, R.drawable.banner_dot_red})
                 //设置指示器的方向
-                .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.ALIGN_PARENT_RIGHT);
+                .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL);
     }
 
     class MyBannerCreater implements Holder<SelectionBannerBean.DataBean.BannersBean> {
@@ -187,7 +193,6 @@ public class HomeSelectionFrag extends Fragment implements IHomePresenter.IHomeP
     @Override
     public void bannerDatas(SelectionBannerBean bean) {
         banners.addAll(bean.getData().getBanners());
-        Log.i("android_LSJ", "bannerDatas: "+ bean.getData().getBanners().get(0).getImage_url());
         setupBanner(convenientBanner);
     }
 
