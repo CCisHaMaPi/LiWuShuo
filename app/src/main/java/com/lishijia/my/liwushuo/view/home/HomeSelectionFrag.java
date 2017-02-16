@@ -16,16 +16,15 @@ import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 
-import com.lishijia.my.liwushuo.MainActivity;
 import com.lishijia.my.liwushuo.R;
 
 
 import com.lishijia.my.liwushuo.dagger.AppModule;
 import com.lishijia.my.liwushuo.dagger.DaggerAppComponent;
 import com.lishijia.my.liwushuo.model.home.bean.SelectionBannerBean;
-import com.lishijia.my.liwushuo.model.home.bean.SelectionBean;
+import com.lishijia.my.liwushuo.model.home.bean.HomeListBean;
 import com.lishijia.my.liwushuo.presenter.home.IHomePresenter;
-import com.lishijia.my.liwushuo.view.adapter.HomeSelectionExpandAdapter;
+import com.lishijia.my.liwushuo.view.adapter.HomeListAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -47,27 +46,47 @@ import butterknife.ButterKnife;
 
 public class HomeSelectionFrag extends Fragment implements IHomePresenter.IHomePresenterCallBack{
 
+    public static final String PARAM_TYPE = "TYPE";
+
     public int pageNo = 1;
+    private int pageId;
+    private String name;
     private Context context;
     @BindView(R.id.home_selection_list_view)
     PullToRefreshExpandableListView refreshListView;
     private ExpandableListView expandableListView;
     private ConvenientBanner convenientBanner;
+    private HomeListAdapter homeListAdapter;
     private List<SelectionBannerBean.DataBean.BannersBean> banners = new ArrayList<>();
-    private Map<String,List<SelectionBean.DataBean.ItemsBean>> datas = new HashMap<>();
+    private Map<String,List<HomeListBean.DataBean.ItemsBean>> datas = new HashMap<>();
     private List<String> keys = new ArrayList<>();
+
     @Inject
     IHomePresenter homePresenter;
-    private HomeSelectionExpandAdapter homeSelectionExpandAdapter;
 
-    public static HomeSelectionFrag newInstance(){
-        return new HomeSelectionFrag();
+
+
+    public static HomeSelectionFrag newInstance(int pageId, String name) {
+        HomeSelectionFrag homeSelectionFrag = new HomeSelectionFrag();
+        Bundle bundle = new Bundle();
+        bundle.putString(PARAM_TYPE,name);
+        bundle.putInt(PARAM_TYPE,pageId);
+        homeSelectionFrag.setArguments(bundle);
+        return homeSelectionFrag;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        name = bundle.getString(PARAM_TYPE);
+        pageId = bundle.getInt(PARAM_TYPE);
     }
 
     @Nullable
@@ -83,15 +102,17 @@ public class HomeSelectionFrag extends Fragment implements IHomePresenter.IHomeP
         setupListView();
 
         homePresenter.queryBanner();
-        homePresenter.querySelectionList(pageNo);
+        homePresenter.querySelectionList(pageId , pageNo);
 
         return view;
     }
 
     private void setupListView() {
         expandableListView = refreshListView.getRefreshableView();
-        homeSelectionExpandAdapter = new HomeSelectionExpandAdapter(keys,datas,context);
-        expandableListView.setAdapter(homeSelectionExpandAdapter);
+        homeListAdapter = new HomeListAdapter(keys,datas,context);
+        expandableListView.setAdapter(homeListAdapter);
+        expandableListView.setGroupIndicator(null);
+        expandableListView.setDivider(null);
         expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -104,19 +125,20 @@ public class HomeSelectionFrag extends Fragment implements IHomePresenter.IHomeP
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
                 //获取当前item数据源检查是否左上角New标志已显示
-                SelectionBean.DataBean.ItemsBean bean = (SelectionBean.DataBean.ItemsBean)
+                HomeListBean.DataBean.ItemsBean bean = (HomeListBean.DataBean.ItemsBean)
                         parent.getExpandableListAdapter().getChild(groupPosition, childPosition);
-                HomeSelectionExpandAdapter.ViewHolder viewHolder = (HomeSelectionExpandAdapter.ViewHolder) v.getTag();
+                HomeListAdapter.ViewHolder viewHolder = (HomeListAdapter.ViewHolder) v.getTag();
                 //若数据源不为空,且New标志正在显示,则隐藏
                 if (null != bean && !bean.isHidden_cover_image()){
                     viewHolder.imageNew.setImageBitmap(null);
                     bean.setHidden_cover_image(true);
                 }
                 //跳转到详情界面
-                Intent intent = new Intent(getActivity(), InfoWebActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("url", bean.getUrl());
-                intent.putExtra("精选", bundle);
+                Intent intent = new Intent(context, InfoWebActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("url", bean.getUrl());
+//                intent.putExtra("精选", bundle);
+                intent.putExtra("url", bean.getContent_url());
                 startActivity(intent);
 
                 return false;
@@ -184,21 +206,21 @@ public class HomeSelectionFrag extends Fragment implements IHomePresenter.IHomeP
     }
 
     @Override
-    public void selectionDatas(SelectionBean bean) {
-        List<SelectionBean.DataBean.ItemsBean> itemsBeen = bean.getData().getItems();
+    public void selectionDatas(HomeListBean bean) {
+        List<HomeListBean.DataBean.ItemsBean> itemsBeen = bean.getData().getItems();
         int size = itemsBeen.size();
         for (int i = 0; i < size; i++) {
-            SelectionBean.DataBean.ItemsBean itemsBean = itemsBeen.get(i);
+            HomeListBean.DataBean.ItemsBean itemsBean = itemsBeen.get(i);
             long time = itemsBean.getCreated_at();
             String formatTime = formatTime(time);
             if (!datas.containsKey(formatTime)) {
                 keys.add(formatTime);
-                datas.put(formatTime,new ArrayList<SelectionBean.DataBean.ItemsBean>());
+                datas.put(formatTime,new ArrayList<HomeListBean.DataBean.ItemsBean>());
             }
             datas.get(formatTime).add(itemsBean);
 
         }
-        homeSelectionExpandAdapter.notifyDataSetChanged();
+        homeListAdapter.notifyDataSetChanged();
         expandListView();
     }
 

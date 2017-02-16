@@ -2,8 +2,10 @@ package com.lishijia.my.liwushuo.model.home.impl;
 
 
 import com.lishijia.my.liwushuo.model.home.IHomeModel;
+import com.lishijia.my.liwushuo.model.home.IHomeTitleModel;
+import com.lishijia.my.liwushuo.model.home.bean.HomeBean;
 import com.lishijia.my.liwushuo.model.home.bean.SelectionBannerBean;
-import com.lishijia.my.liwushuo.model.home.bean.SelectionBean;
+import com.lishijia.my.liwushuo.model.home.bean.HomeListBean;
 import com.lishijia.my.liwushuo.utils.AppHttpService;
 import com.lishijia.my.liwushuo.utils.UrlConstants;
 
@@ -23,7 +25,7 @@ import rx.schedulers.Schedulers;
  * Created by lsj on 2017/2/8.
  */
 
-public class HomeModel implements IHomeModel {
+public class HomeModel implements IHomeModel , IHomeTitleModel {
 
     private Retrofit retrofit;
 
@@ -36,16 +38,16 @@ public class HomeModel implements IHomeModel {
     }
 
     @Override
-    public void querySelectionList(int pageno, final IHomeModelCallBack callBack) {
+    public void querySelectionList(int pageId, int pageno, final IHomeModel.IHomeModelCallBack callBack) {
         AppHttpService appHttpService = retrofit.create(AppHttpService.class);
-        appHttpService.querySelectionBeanDatas().enqueue(new Callback<SelectionBean>() {
+        appHttpService.querySelectionBeanDatas(pageId).enqueue(new Callback<HomeListBean>() {
             @Override
-            public void onResponse(Call<SelectionBean> call, Response<SelectionBean> response) {
+            public void onResponse(Call<HomeListBean> call, Response<HomeListBean> response) {
                 callBack.selectionDatas(response.body());
             }
 
             @Override
-            public void onFailure(Call<SelectionBean> call, Throwable t) {
+            public void onFailure(Call<HomeListBean> call, Throwable t) {
 
             }
         });
@@ -53,32 +55,50 @@ public class HomeModel implements IHomeModel {
     }
 
     @Override
-    public void queryBanner(final IHomeModelCallBack callBack) {
+    public void queryBanner(final IHomeModel.IHomeModelCallBack callBack) {
         AppHttpService appHttpService = retrofit.create(AppHttpService.class);
 
         appHttpService.querySelectionBannerDatas()
-        .map(new Func1<SelectionBannerBean, SelectionBannerBean>() {
+                .map(new Func1<SelectionBannerBean, SelectionBannerBean>() {
+                    @Override
+                    public SelectionBannerBean call(SelectionBannerBean bean) {
+                        return bean;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<SelectionBannerBean>() {
+                    @Override
+                    public void call(SelectionBannerBean bean) {
+                        callBack.bannerDatas(bean);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                }, new Action0() {
+                    @Override
+                    public void call() {
+                    }
+                });
+    }
+
+    @Override
+    public void queryHomeBean(final IHomeTitleModel.IHomeModelCallBack callBack) {
+
+        AppHttpService appHttpService = retrofit.create(AppHttpService.class);
+        appHttpService.queryHomeBeanDates().enqueue(new Callback<HomeBean>() {
             @Override
-            public SelectionBannerBean call(SelectionBannerBean bean) {
-                return bean;
+            public void onResponse(Call<HomeBean> call, Response<HomeBean> response) {
+                callBack.homeBeanDatas(response.body());
             }
-        })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<SelectionBannerBean>() {
+
             @Override
-            public void call(SelectionBannerBean bean) {
-                callBack.bannerDatas(bean);
-            }
-        }, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                throwable.printStackTrace();
-            }
-        }, new Action0() {
-            @Override
-            public void call() {
+            public void onFailure(Call<HomeBean> call, Throwable t) {
+
             }
         });
     }
+
 }

@@ -42,4 +42,5 @@ dependencies {
     compile 'io.reactivex:rxjava:1.2.6'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'com.github.siyamed:android-shape-imageview:0.9.3'
 }

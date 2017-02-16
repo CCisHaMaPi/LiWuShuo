@@ -2,6 +2,8 @@ package com.lishijia.my.liwushuo.dagger;
 
 
 import com.lishijia.my.liwushuo.MainActivity;
+import com.lishijia.my.liwushuo.view.home.HomeCommonFrag;
+import com.lishijia.my.liwushuo.view.home.HomeFrag;
 import com.lishijia.my.liwushuo.view.home.HomeSelectionFrag;
 
 import dagger.Component;
@@ -15,5 +17,9 @@ public interface AppComponent {
     void inject(HomeSelectionFrag frag);
 
     void inject(MainActivity activity);
+
+    void inject(HomeFrag frag);
+
+    void inject(HomeCommonFrag frag);
 }
 

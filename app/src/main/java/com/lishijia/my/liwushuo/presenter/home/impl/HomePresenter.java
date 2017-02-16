@@ -1,11 +1,12 @@
 package com.lishijia.my.liwushuo.presenter.home.impl;
 
-import android.util.Log;
-
 import com.lishijia.my.liwushuo.model.home.IHomeModel;
+import com.lishijia.my.liwushuo.model.home.IHomeTitleModel;
+import com.lishijia.my.liwushuo.model.home.bean.HomeBean;
 import com.lishijia.my.liwushuo.model.home.bean.SelectionBannerBean;
-import com.lishijia.my.liwushuo.model.home.bean.SelectionBean;
+import com.lishijia.my.liwushuo.model.home.bean.HomeListBean;
 import com.lishijia.my.liwushuo.presenter.home.IHomePresenter;
+import com.lishijia.my.liwushuo.presenter.home.IHomeTitlePresenter;
 
 import javax.inject.Inject;
 
@@ -13,9 +14,12 @@ import javax.inject.Inject;
  * Created by lsj on 2017/2/8.
  */
 
-public class HomePresenter implements IHomePresenter, IHomeModel.IHomeModelCallBack{
+public class HomePresenter implements IHomePresenter,IHomeTitlePresenter,IHomeTitleModel.IHomeModelCallBack, IHomeModel.IHomeModelCallBack{
 
     private IHomeModel homeModel;
+    private IHomeTitleModel homeTitleModel;
+    @Inject
+    IHomeTitlePresenterCallBack titleCallback;
     @Inject
     IHomePresenterCallBack callback;
 
@@ -24,25 +28,38 @@ public class HomePresenter implements IHomePresenter, IHomeModel.IHomeModelCallB
         this.homeModel = model;
     }
 
+    public HomePresenter(IHomeTitlePresenterCallBack callBack, IHomeTitleModel model){
+        this.titleCallback = callBack;
+        this.homeTitleModel = model;
+    }
+
     @Override
-    public void querySelectionList(int pageno) {
-        homeModel.querySelectionList(pageno, this);
+    public void querySelectionList(int pageId, int pageno) {
+        homeModel.querySelectionList(pageId, pageno, this);
     }
 
     @Override
     public void queryBanner() {
         homeModel.queryBanner(this);
-        Log.i("android_LSJ", "posenter: queryBanner ");
     }
 
     @Override
-    public void selectionDatas(SelectionBean bean) {
+    public void queryHomeBean() {
+        homeTitleModel.queryHomeBean(this);
+    }
+
+    @Override
+    public void selectionDatas(HomeListBean bean) {
         callback.selectionDatas(bean);
     }
 
     @Override
     public void bannerDatas(SelectionBannerBean bean) {
         callback.bannerDatas(bean);
-        Log.i("android_LSJ", "posenter: callback "+ bean.toString());
+    }
+
+    @Override
+    public void homeBeanDatas(HomeBean bean) {
+        titleCallback.homeBeanDatas(bean);
     }
 }

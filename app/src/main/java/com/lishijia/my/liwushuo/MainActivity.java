@@ -8,7 +8,6 @@ import android.widget.RadioGroup;
 
 import com.lishijia.my.liwushuo.dagger.AppModule;
 import com.lishijia.my.liwushuo.dagger.DaggerAppComponent;
-import com.lishijia.my.liwushuo.dagger.FragModule;
 import com.lishijia.my.liwushuo.view.clazz.ClazzFrag;
 import com.lishijia.my.liwushuo.view.home.HomeFrag;
 import com.lishijia.my.liwushuo.view.hot.HotFrag;

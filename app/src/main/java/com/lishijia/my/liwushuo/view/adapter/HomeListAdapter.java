@@ -1,7 +1,6 @@
 package com.lishijia.my.liwushuo.view.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,28 +9,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lishijia.my.liwushuo.R;
-import com.lishijia.my.liwushuo.model.home.bean.SelectionBean;
+import com.lishijia.my.liwushuo.model.home.bean.HomeListBean;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 
 /**
- * Created by lsj on 2017/2/12.
+ * Created by TT on 2017/2/17.
  */
 
-public class HomeSelectionExpandAdapter extends BaseExpandableListAdapter{
+public class HomeListAdapter extends BaseExpandableListAdapter {
+
 
     private List<String> keys;
-    private Map<String,List<SelectionBean.DataBean.ItemsBean>> datas;
+    private Map<String,List<HomeListBean.DataBean.ItemsBean>> datas;
     private Context context;
     private LayoutInflater inflater;
 
-    public HomeSelectionExpandAdapter(List<String> keys, Map<String, List<SelectionBean.DataBean.ItemsBean>> datas, Context context) {
+    public HomeListAdapter(List<String> keys, Map<String, List<HomeListBean.DataBean.ItemsBean>> datas, Context context) {
         this.keys = keys;
         this.datas = datas;
         this.context = context;
@@ -46,7 +45,7 @@ public class HomeSelectionExpandAdapter extends BaseExpandableListAdapter{
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        List<SelectionBean.DataBean.ItemsBean> itemsBeen = datas.get(keys.get(groupPosition));
+        List<HomeListBean.DataBean.ItemsBean> itemsBeen = datas.get(keys.get(groupPosition));
         return itemsBeen == null ? 0 : itemsBeen.size();
     }
 
@@ -57,8 +56,8 @@ public class HomeSelectionExpandAdapter extends BaseExpandableListAdapter{
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        List<SelectionBean.DataBean.ItemsBean> itemsBeen = datas.get(keys.get(groupPosition));
-        SelectionBean.DataBean.ItemsBean bean = itemsBeen.get(childPosition);
+        List<HomeListBean.DataBean.ItemsBean> itemsBeen = datas.get(keys.get(groupPosition));
+        HomeListBean.DataBean.ItemsBean bean = itemsBeen.get(childPosition);
         if (null != bean){
             return bean;
         }
@@ -82,12 +81,18 @@ public class HomeSelectionExpandAdapter extends BaseExpandableListAdapter{
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        TextView textView = (TextView) convertView;
-        if (textView == null) {
-            textView = new TextView(context);
+        View view = convertView;
+        if (null == view){
+            view = inflater.inflate(R.layout.item_selection_group, parent, false);
         }
-        textView.setText("["+keys.get(groupPosition)+"]");
-        return textView;
+        TextView textView = (TextView) view.findViewById(R.id.item_selection_group_title);
+        String title = keys.get(groupPosition);
+        if (null != title){
+            textView.setText(title);
+        }else {
+            textView.setText("数据混乱请尝试重新加载");
+        }
+        return view;
     }
 
     @Override
@@ -100,17 +105,19 @@ public class HomeSelectionExpandAdapter extends BaseExpandableListAdapter{
             view.setTag(holder);
         }else {
             holder = (ViewHolder) view.getTag();
-            holder.imageView.setImageResource(R.mipmap.ic_launcher);
+            holder.imageView.setImageResource(R.drawable.ic_tab_category_normal);
             holder.textNum.setText("");
         }
-        List<SelectionBean.DataBean.ItemsBean> itemsBeens = datas.get(keys.get(groupPosition));
-        final SelectionBean.DataBean.ItemsBean bean = itemsBeens.get(childPosition);
+        List<HomeListBean.DataBean.ItemsBean> itemsBeens = datas.get(keys.get(groupPosition));
+        final HomeListBean.DataBean.ItemsBean bean = itemsBeens.get(childPosition);
 
-        Picasso.with(context).load(bean.getCover_image_url()).into(holder.imageView);
-        holder.textNum.setText(String.valueOf(bean.getLikes_count()));
-        holder.textTitle.setText(bean.getTitle());
-        if (bean.isHidden_cover_image()){
-            holder.imageNew.setImageBitmap(null);
+        if (null != bean){
+            Picasso.with(context).load(bean.getCover_image_url()).into(holder.imageView);
+            holder.textNum.setText(String.valueOf(bean.getLikes_count()));
+            holder.textTitle.setText(bean.getTitle());
+            if (bean.isHidden_cover_image()){
+                holder.imageNew.setImageBitmap(null);
+            }
         }
         return view;
     }
