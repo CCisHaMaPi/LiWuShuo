@@ -57,6 +57,11 @@ public class HomeSelectionExpandAdapter extends BaseExpandableListAdapter{
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
+        List<SelectionBean.DataBean.ItemsBean> itemsBeen = datas.get(keys.get(groupPosition));
+        SelectionBean.DataBean.ItemsBean bean = itemsBeen.get(childPosition);
+        if (null != bean){
+            return bean;
+        }
         return null;
     }
 
@@ -107,13 +112,6 @@ public class HomeSelectionExpandAdapter extends BaseExpandableListAdapter{
         if (bean.isHidden_cover_image()){
             holder.imageNew.setImageBitmap(null);
         }
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bean.setHidden_cover_image(true);
-                holder.imageNew.setImageBitmap(null);
-            }
-        });
         return view;
     }
 
@@ -123,11 +121,11 @@ public class HomeSelectionExpandAdapter extends BaseExpandableListAdapter{
     }
 
 
-    class ViewHolder{
+    public class ViewHolder{
         @BindView(R.id.item_home_image_view)
-        ImageView imageView;
+        public ImageView imageView;
         @BindView(R.id.item_home_new)
-        ImageView imageNew;
+        public ImageView imageNew;
         @BindView(R.id.item_home_text_favorite)
         TextView textNum;
         @BindView(R.id.item_home_text_title)

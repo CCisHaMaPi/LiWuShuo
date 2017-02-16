@@ -1,10 +1,10 @@
 package com.lishijia.my.liwushuo.view.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +16,7 @@ import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 
+import com.lishijia.my.liwushuo.MainActivity;
 import com.lishijia.my.liwushuo.R;
 
 
@@ -46,6 +47,7 @@ import butterknife.ButterKnife;
 
 public class HomeSelectionFrag extends Fragment implements IHomePresenter.IHomePresenterCallBack{
 
+    public int pageNo = 1;
     private Context context;
     @BindView(R.id.home_selection_list_view)
     PullToRefreshExpandableListView refreshListView;
@@ -81,7 +83,7 @@ public class HomeSelectionFrag extends Fragment implements IHomePresenter.IHomeP
         setupListView();
 
         homePresenter.queryBanner();
-        homePresenter.querySelectionList(1);
+        homePresenter.querySelectionList(pageNo);
 
         return view;
     }
@@ -94,6 +96,30 @@ public class HomeSelectionFrag extends Fragment implements IHomePresenter.IHomeP
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 return true;
+            }
+        });
+        //指南界面下方ListView点击事件
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+
+                //获取当前item数据源检查是否左上角New标志已显示
+                SelectionBean.DataBean.ItemsBean bean = (SelectionBean.DataBean.ItemsBean)
+                        parent.getExpandableListAdapter().getChild(groupPosition, childPosition);
+                HomeSelectionExpandAdapter.ViewHolder viewHolder = (HomeSelectionExpandAdapter.ViewHolder) v.getTag();
+                //若数据源不为空,且New标志正在显示,则隐藏
+                if (null != bean && !bean.isHidden_cover_image()){
+                    viewHolder.imageNew.setImageBitmap(null);
+                    bean.setHidden_cover_image(true);
+                }
+                //跳转到详情界面
+                Intent intent = new Intent(getActivity(), InfoWebActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("url", bean.getUrl());
+                intent.putExtra("精选", bundle);
+                startActivity(intent);
+
+                return false;
             }
         });
     }
